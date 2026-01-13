@@ -34,6 +34,14 @@ The National Cancer Institute notes that immunotherapy represents one of several
 The study was funded by the National Institutes of Health and Merck & Co.
 
 =======================================================================================================
+
+
+when will it end ?
+
+how many patients are there?
+
+
+==================================================
 python train_classifier.py
 
 streamlit run app.py

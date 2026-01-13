@@ -4,7 +4,7 @@ import torch
 class QAEngine:
     def __init__(self):
         # Using FLAN-T5 for instruction understanding
-        self.model_name = "google/flan-t5-base"
+        self.model_name = "./qa_model_squad"
         print(f"Initializing generative engine: {self.model_name}")
         
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
