@@ -70,10 +70,6 @@ class SQuADEvaluator:
         """
         Évaluateur pour model SQuAD.
         """
-        print("="*80)
-        print("EVALUATION SUR SQUAD 2.0")
-        print("="*80)
-        
         print(f"\nLoading the model depuis {model_path}...")
         self.tokenizer = AutoTokenizer.from_pretrained(model_path)
         self.model = AutoModelForSeq2SeqLM.from_pretrained(model_path)
@@ -121,10 +117,10 @@ class SQuADEvaluator:
         
         if num_examples:
             dataset = load_dataset("rajpurkar/squad_v2", split=f"{split}[:{num_examples}]")
-            print(f" {len(dataset)} examples (limité pour test)")
+            print(f" {len(dataset)}")
         else:
             dataset = load_dataset("rajpurkar/squad_v2", split=split)
-            print(f" {len(dataset)} examples (complet)")
+            print(f" {len(dataset)}")
         
         # Métriques
         exact_matches = []
@@ -198,10 +194,8 @@ class SQuADEvaluator:
         """
         Affiche the results of manière formatée.
         """
-        print("\n" + "="*80)
         print("RESULTS D'EVALUATION")
-        print("="*80)
-        
+
         # Overall
         print("\n RESULTS GLOBAUX")
         print(f"{'─'*40}")
@@ -222,29 +216,7 @@ class SQuADEvaluator:
         print(f"Exact Match:  {results['unanswerable']['exact_match']:.2%}")
         print(f"F1 Score:     {results['unanswerable']['f1']:.2%}")
         print(f"Examples:     {results['unanswerable']['num_examples']}")
-        
-        print("\n" + "="*80)
-        
-        # Interprétation
-        print("\n INTERPRÉTATION")
-        print(f"{'─'*40}")
-        
-        overall_f1 = results['overall']['f1']
-        
-        if overall_f1 > 0.80:
-            print(" Excellentes performances !")
-        elif overall_f1 > 0.70:
-            print(" Bonnes performances")
-        elif overall_f1 > 0.60:
-            print(" Performances moyennes - peut être amélioré")
-        else:
-            print(" Performances faibles - training insuffisant")
-        
-        # Comparaison state-of-the-art
-        print(f"\n Référence (State-of-the-art sur SQuAD 2.0):")
-        print(f"   - Humains:     EM: 86.8% | F1: 89.5%")
-        print(f"   - BERT-large:  EM: 80.0% | F1: 83.1%")
-        print(f"   - Votre model: EM: {results['overall']['exact_match']:.1%} | F1: {results['overall']['f1']:.1%}")
+    
     
     def compare_examples(self, num_examples=10):
         """
@@ -302,48 +274,24 @@ def main():
     model_path = "./qa_model_squad"
     
     if not os.path.exists(model_path):
-        print(" ERREUR: Model introuvable!")
-        print(f"   Emplacement attendu: {model_path}")
-        print("\n Exécutez of abord: python train_on_squad.py")
+        print("model not found.")
         return
     
-    print("="*80)
     print("EVALUATION MODEL SQUAD")
-    print("="*80)
     
-    print("\nOptions:")
-    print("  1. Evaluation rapide (100 examples)")
-    print("  2. Evaluation complète (11K examples) - ~10-15 min")
-    print("  3. Comparaison of examples (10 examples)")
-    
-    try:
-        choice = input("\nYour choice (1-3): ").strip()
-    except KeyboardInterrupt:
-        print("\n\nInterrompu.")
-        return
+    choice = 1
     
     try:
         evaluator = SQuADEvaluator(model_path)
         
-        if choice == "1":
+        if choice == 1:
             # Rapide
             evaluator.evaluate(num_examples=100)
         
-        elif choice == "2":
-            # Complet
-            print("\n Evaluation complète - cela peut prendre 10-15 minutes")
-            confirm = input("   Continue ? (y/n): ").strip().lower()
-            if confirm == 'y':
+        elif choice == 2:
                 evaluator.evaluate()
-            else:
-                print("Annulé.")
-        
-        elif choice == "3":
-            # Comparaison
-            evaluator.compare_examples(num_examples=10)
-        
+           
         else:
-            print("Invalid choice. Starting quick evaluation...")
             evaluator.evaluate(num_examples=100)
         
     except Exception as e:

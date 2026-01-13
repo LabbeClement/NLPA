@@ -244,8 +244,8 @@ def main():
     
     # Generate the dataset
     qa_data = generator.create_qa_dataset(
-        num_articles=100,         # Nombre of articles à traiter
-        questions_per_article=4,  # Questions par article
+        num_articles=100,        
+        questions_per_article=4,
         output_file="qa_dataset.json"
     )
     

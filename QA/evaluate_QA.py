@@ -364,10 +364,8 @@ class QAEvaluator:
         """
         Affiche the comparaison entre fine-tuned et baseline.
         """
-        print("\n" + "="*80)
         print("COMPARAISON DIRECTE")
-        print("="*80)
-        
+    
         print(f"\n{'Métrique':<20} {'Fine-tuned':>12} {'Baseline':>12} {'Amélioration':>15}")
         print(f"{'-'*62}")
         
@@ -482,10 +480,5 @@ def main():
     with open('qa_evaluation_results.json', 'w') as f:
         json.dump(results, f, indent=2)
     
-    print("\n Résultats saveds dans qa_evaluation_results.json")
-    print("\n" + "="*80)
-    print("EVALUATION TERMINÉE")
-    print("="*80)
-
 if __name__ == "__main__":
     main()

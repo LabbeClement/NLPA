@@ -12,13 +12,12 @@ class SQuADQASystem:
         """
         Q&A system based on the SQuAD model.
         """
-        print("="*80)
         print("Q&A SYSTEM - SQUAD MODEL")
         print("="*80)
         
         if not os.path.exists(model_path):
-            print(f"\n ERROA: Model not found in {model_path}")
-            print("   Run first: python train_on_squad.py")
+            print(f"\n ERROF: Model not found in {model_path}")
+            print("   run : python train_on_squad.py")
             raise FileNotFoundError(f"Model not found: {model_path}")
         
         print(f"\nLoading model from {model_path}...")
@@ -68,12 +67,9 @@ class SQuADQASystem:
         """
         Interactive mode: ask questions on a context.
         """
-        print("\n" + "="*80)
         print("INTERACTIVE MODE")
         print("="*80)
-        
-        print("\n First enter a context (text on which to ask questions)")
-        print("   Type 'quit' to exit, 'new' for a new context")
+
         
         while True:
             print("\n" + "-"*80)
@@ -88,7 +84,6 @@ class SQuADQASystem:
                 continue
             
             print(f"\n Context registered ({len(context)} characters)")
-            print("\n Ask your questions (type 'new' to change context, 'quit' to exit)")
             
             # Loop questions on ce context
             while True:
@@ -109,12 +104,7 @@ class SQuADQASystem:
                 print(f"\n Answer: {answer}")
     
     def demo_examples(self):
-        """
-        Démonstration with examples pré-définis.
-        """
-        print("\n" + "="*80)
         print("DEMONSTRATION - EXAMPLES")
-        print("="*80)
         
         examples = [
             {
@@ -155,9 +145,7 @@ def test_with_fake_news():
     """
     Teste the model SQuAD on un article fake news.
     """
-    print("\n" + "="*80)
     print("TEST ON FAKE NEWS")
-    print("="*80)
     
     try:
         from datasets import load_dataset
@@ -194,40 +182,23 @@ def test_with_fake_news():
 
         
     except ImportError:
-        print(" Dataset 'datasets' non available")
+        print(" Dataset 'datasets' unavailable")
     except Exception as e:
         print(f" Error: {e}")
 
 def main():
-    """
-    Menu principal.
-    """
-    print("="*80)
-    print("SQUAD MODEL TEST")
-    print("="*80)
-    
-    print("\nWhat would you like to do?")
-    print("  1. Interactive mode (ask your own questions)")
-    print("  2. Demonstration with examples")
-    print("  3. Test on a fake news article")
-    print("  4. Test everything")
-    
-    try:
-        choice = input("\nYour choice (1-4): ").strip()
-    except KeyboardInterrupt:
-        print("\n\nInterrompu.")
-        return
-    
+
+    choice = 1
     try:
         qa = SQuADQASystem()
         
-        if choice == "1":
+        if choice == 1:
             qa.interactive_mode()
-        elif choice == "2":
+        elif choice == 2:
             qa.demo_examples()
-        elif choice == "3":
+        elif choice == 3:
             test_with_fake_news()
-        elif choice == "4":
+        elif choice == 4:
             qa.demo_examples()
             test_with_fake_news()
             print("\n" + "="*80)
@@ -238,7 +209,7 @@ def main():
     
     except FileNotFoundError as e:
         print(f"\n{e}")
-        print("\nExécutez first: python train_on_squad.py")
+        print("\nrun : python train_on_squad.py")
     except Exception as e:
         print(f"\n Error: {e}")
 

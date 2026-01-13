@@ -15,7 +15,7 @@ from datasets import load_dataset
 import os
 
 # Configuration
-MODEL_NAME = "google/flan-t5-base"  # Déjà pré-entraîné mais on peut affiner
+MODEL_NAME = "google/flan-t5-base"
 OUTPUT_DIR = "./qa_model_squad"
 os.environ["WANDB_DISABLED"] = "true"
 
@@ -143,10 +143,6 @@ class SQuADTrainer:
         
         # Quick test mode
         if quick_test:
-            print("\n QUICK TEST MODE ACTIVATED")
-            print("   - 1000 training examples")
-            print("   - 1 epoch")
-            print("   - For complete test, launch without quick_test=True")
             self.max_samples = 1000
             num_epochs = 1
         
@@ -200,7 +196,8 @@ class SQuADTrainer:
             save_total_limit=2,
             
             # Optimizations
-            fp16=torch.cuda.is_available(),
+            fp16=False,
+            bf16=True,
             gradient_accumulation_steps=2,
             
             # Best model
@@ -235,7 +232,7 @@ class SQuADTrainer:
         if quick_test:
             print("\n Quick test mode - short training")
         else:
-            print(f"\n Configuration:")
+            print("\n")
             print(f"   - Epochs: {num_epochs}")
             print(f"   - Batch size: {batch_size}")
             print(f"   - Learning rate: {learning_rate}")
@@ -265,7 +262,7 @@ class SQuADTrainer:
     
     def test_model(self, num_examples=5):
         """
-        Teste the model entraîné sur quelques examples.
+        Test the model trained on some examples.
         """
         print("\n" + "="*80)
         print("MODEL TEST")
@@ -282,7 +279,6 @@ class SQuADTrainer:
         print("Loading test examples...")
         test_data = load_dataset("rajpurkar/squad_v2", split=f"validation[:{num_examples}]")
         
-        print("\n" + "-"*80)
         print("PREDICTION EXAMPLES")
         print("-"*80)
         
@@ -313,60 +309,35 @@ class SQuADTrainer:
             print("-" * 80)
 
 def main():
-    """
-    Fonction principale.
-    """
     import sys
     
-    print("="*80)
-    print("QUICK TRAINING ON SQUAD 2.0")
-    print("="*80)
-    
-    print("\nAvailable options:")
-    print("  1. Quick test (1000 examples, 1 epoch) - ~5-10 min")
-    print("  2. Complete training (130K examples, 3 epochs) - ~2-3h GPU")
-    print("  3. Medium training (10K examples, 2 epochs) - ~30 min")
-    
-    try:
-        choice = input("\nYour choice (1/2/3): ").strip()
-    except:
-        choice = "1"
+    choice = 3
     
     trainer = SQuADTrainer()
     
-    if choice == "1":
+    if choice == 1:
         # Test rapide
         print("\n Starting quick test...")
         trainer.train(quick_test=True)
         trainer.test_model(num_examples=5)
         
-    elif choice == "2":
+    elif choice == 2:
         # Complet
         print("\n Starting complete training...")
-        print("   (This may take 2-3 hours on GPU)")
-        confirm = input("   Continue? (y/n): ").strip().lower()
-        if confirm == 'y':
-            trainer.train(num_epochs=3, batch_size=8)
-            trainer.test_model(num_examples=10)
-        else:
-            print("Canceled.")
-            return
+        trainer.train(num_epochs=3, batch_size=8)
+        trainer.test_model(num_examples=10)
     
-    elif choice == "3":
+    elif choice == 3:
         # Moyen
         print("\n Starting medium training...")
         trainer.max_samples = 10000
-        trainer.train(num_epochs=2, batch_size=8)
+        trainer.train(num_epochs=2, batch_size=2)
         trainer.test_model(num_examples=8)
     
     else:
         print("Invalid choice. Starting quick test by default...")
         trainer.train(quick_test=True)
         trainer.test_model(num_examples=5)
-    
-    print("\n" + "="*80)
-    print(" COMPLETE")
-    print("="*80)
     print(f"\nModèle saved dans: {OUTPUT_DIR}")
 if __name__ == "__main__":
     main()

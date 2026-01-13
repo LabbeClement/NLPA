@@ -1,3 +1,13 @@
+projet NLP Matthias Rey, Clément Labbé
+
+
+# commandes : 
+python train_classifier.py
+python QA/train_on_squad.py
+streamlit run app.py
+
+
+
 ========================================================================================================
 
 BREAKING: Scientists Discover Government Has Been Hiding Cure for Cancer for 30 Years!
@@ -35,6 +45,7 @@ The study was funded by the National Institutes of Health and Merck & Co.
 
 =======================================================================================================
 
+what is this article about ?
 
 when will it end ?
 
@@ -43,6 +54,4 @@ how many patients are there?
 
 ==================================================
 
-python train_classifier.py
 
-streamlit run app.py
