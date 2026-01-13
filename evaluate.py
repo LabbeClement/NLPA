@@ -7,22 +7,23 @@ from datasets import load_dataset
 from utils import clean_text
 
 def evaluate():
-    print("Chargement du modele pour evaluation technique...")
+    print("Loading model for technical evaluation...")
     model_path = "./fake_news_model"
     try:
         tokenizer = AutoTokenizer.from_pretrained(model_path)
         model = AutoModelForSequenceClassification.from_pretrained(model_path)
     except:
-        print("Erreur: Modele non trouve. Lancez train_classifier.py d'abord.")
+        print("Error: Model not found. Run train_classifier.py first.")
         return
 
-    # Chargement d'un set de test independant
+    # Load independent test set
+    print("Loading test dataset...")
     dataset = load_dataset("gonzaloA/fake_news", split="test[:100]") 
     
     true_labels = []
     pred_labels = []
     
-    print("Inference sur le jeu de test...")
+    print("Running inference on test set...")
     for item in dataset:
         text = clean_text(item['title'] + " " + item['text'])
         inputs = tokenizer(text, return_tensors="pt", truncation=True, max_length=512)
@@ -34,22 +35,22 @@ def evaluate():
         true_labels.append(item['label'])
         pred_labels.append(prediction)
 
-    # Matrice de confusion
+    # Confusion matrix
     cm = confusion_matrix(true_labels, pred_labels)
     
     plt.figure(figsize=(8, 6))
     sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', 
                 xticklabels=['Fake', 'Real'], 
                 yticklabels=['Fake', 'Real'])
-    plt.ylabel('Verite Terrain')
-    plt.xlabel('Prediction Modele')
-    plt.title('Matrice de Confusion (Performance Classification)')
+    plt.ylabel('Ground Truth')
+    plt.xlabel('Model Prediction')
+    plt.title('Confusion Matrix (Classification Performance)')
     
     filename = 'confusion_matrix.png'
     plt.savefig(filename)
-    print(f"Graphique sauvegarde : {filename}")
+    print(f"Chart saved: {filename}")
     
-    print("\n--- METRIQUES DETAILLEES ---")
+    print("\n--- DETAILED METRICS ---")
     print(classification_report(true_labels, pred_labels, target_names=['Fake', 'Real']))
 
 if __name__ == "__main__":
