@@ -6,8 +6,7 @@ from utils import clean_text
 import random
 import os
 
-# IMPORTANT: Use CASED model to preserve case information
-MODEL_NAME = "distilbert-base-cased"  # Changed from "uncased"
+MODEL_NAME = "distilbert-base-cased"
 
 os.environ["WANDB_DISABLED"] = "true"
 
@@ -18,12 +17,6 @@ def check_device():
     return False
 
 def get_final_balanced_dataset():
-    """
-    Final version with:
-    1. Improved clean_text() that preserves case, punctuation, contractions
-    2. Balanced medical content (1.5:1 ratio)
-    3. Model will learn style-based signals (CAPS, !!!, etc.)
-    """
     texts = []
     labels = []
 
@@ -117,7 +110,7 @@ def get_final_balanced_dataset():
                             if added % 200 == 0:
                                 print(f"      Progress: {added}/{need_to_add}")
             
-            print(f"   ✓ Added {added} medical articles")
+            print(f"   Added {added} medical articles")
         
         except Exception as e:
             print(f"   Warning: {e}")

@@ -2,38 +2,18 @@ import re
 import string
 
 def clean_text(text):
-    """
-    IMPROVED Text cleaning function that preserves important signals for fake news detection.
-    
-    What we remove:
-    1. URLs (fake news often has suspicious links)
-    2. HTML tags
-    3. Excessive spaces
-    
-    What we PRESERVE (important signals):
-    1. Case (SHOUTING in all caps is a fake news signal)
-    2. Punctuation (!!!, ???, emotional emphasis)
-    3. Contractions (won't, don't, can't - natural language)
-    4. Special characters (important for tone)
-    
-    The model will learn that:
-    - "BREAKING!!!" is different from "breaking"
-    - "You WON'T BELIEVE" is different from "you wont believe"
-    - Excessive punctuation signals sensationalism
-    """
     if not isinstance(text, str):
         return ""
     
-    # 1. Remove URLs (ESSENTIAL for fake news detection)
+    # 1. Remove URLs
     text = re.sub(r'https?://\S+|www\.\S+', '', text)
     
     # 2. Remove HTML tags
     text = re.sub(r'<.*?>', '', text)
     
-    # 3. Normalize excessive spaces (but keep single spaces)
+    # 3. Normalize excessive spaces
     text = re.sub(r'\s+', ' ', text).strip()
-    
-    # That's it! We preserve everything else.
+
     return text
 
 def analyze_complexity(text):
